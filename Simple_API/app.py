@@ -43,6 +43,7 @@ def add_user():
 
 @app.route("/update/<username>", methods=["PUT"])
 def update_user(username):
+    print(username)
     user = User.query.filter_by(username=username).first()
     if not user:
         return jsonify({"message": "User not found"}), 404
@@ -54,6 +55,17 @@ def update_user(username):
     user.email = data["email"]
     db.session.commit()
     return jsonify({"message": "User updated"}), 200
+
+
+@app.route("/delete/<username>", methods=["DELETE"])
+def delete_user(username):
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"message": "User deleted"}), 200
 
 
 if __name__ == "__main__":
